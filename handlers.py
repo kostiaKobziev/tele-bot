@@ -1604,6 +1604,7 @@ async def process_cat(message: Message, state: FSMContext):
         data['cat'] = message.text
     con = sql.connect('prod_test_db_1.db.db')
     with con:
+        button_8 = KeyboardButton('В головне меню')
         cur = con.cursor()
         cur.execute(f"SELECT * FROM prod WHERE main_cat = '{data['cat']}'")
         rows = cur.fetchall()
@@ -1618,6 +1619,7 @@ async def process_cat(message: Message, state: FSMContext):
             counter_sub_cat_st = str(counter_sub_cat)
             globals()[str('buttonmenucat_%s') + str(counter_sub_cat_st)] = KeyboardButton(f"{str(row)}")
             sub_cat_kb.row(globals()[str('buttonmenucat_%s') + str(counter_sub_cat_st)])
+            sub_cat_kb.row(button_8)
     con.commit()
     cur.close()
     if data['cat'] == 'В головне меню':
@@ -1660,7 +1662,7 @@ async def process_cat(message: Message, state: FSMContext):
 # Сохраняем пол, выводим анкету
 @dp.message_handler(state=Form_prod.sub_cat)
 async def process_sub_cat(message: Message, state: FSMContext):
-    if data['sub_cat'] == 'В головне меню':
+    if data['cat'] == 'В головне меню':
         await state.finish()
         await bot.send_message(chat_id=message.from_user.id, text=("Вы снова в меню!"), reply_markup=kb.greet_kb)
     else :
