@@ -1660,24 +1660,28 @@ async def process_cat(message: Message, state: FSMContext):
 # Сохраняем пол, выводим анкету
 @dp.message_handler(state=Form_prod.sub_cat)
 async def process_sub_cat(message: Message, state: FSMContext):
-    async with state.proxy() as data:
-        data['sub_cat'] = message.text
-        con = sql.connect('prod_test_db_1.db.db')
-        with con:
-            cur = con.cursor()
-            cur.execute(f"SELECT * FROM prod WHERE main_cat = '{data['cat']}' AND sub_cat ='{data['sub_cat']}' ")
-            rows = cur.fetchall()
-            for row in rows:
-                text_prod =  str(row[3]) + '\n\n' + str(row[4]) + '\n\n' + str(row[5]) + '\n\n' + str(row[6])
-                data_prod = ' Кошик: ' + str(row[2])
-                inline_btn_1 = InlineKeyboardButton(text='Додати в кошик!', callback_data=data_prod)
-                inline_kb1 = InlineKeyboardMarkup().add(inline_btn_1)
-                await bot.send_photo(chat_id=message.from_user.id,
-                                     photo=row[7], caption=text_prod, reply_markup=inline_kb1)
-            con.commit()
-            cur.close()
-            await bot.send_message(chat_id=message.from_user.id, text=("Вы знову в меню!"), reply_markup=kb.greet_kb)
-    await state.finish()
+    if data['sub_cat'] == 'В головне меню':
+        await state.finish()
+        await bot.send_message(chat_id=message.from_user.id, text=("Вы снова в меню!"), reply_markup=kb.greet_kb)
+    else :
+        async with state.proxy() as data:
+            data['sub_cat'] = message.text
+            con = sql.connect('prod_test_db_1.db.db')
+            with con:
+                cur = con.cursor()
+                cur.execute(f"SELECT * FROM prod WHERE main_cat = '{data['cat']}' AND sub_cat ='{data['sub_cat']}' ")
+                rows = cur.fetchall()
+                for row in rows:
+                    text_prod =  str(row[3]) + '\n\n' + str(row[4]) + '\n\n' + str(row[5]) + '\n\n' + str(row[6])
+                    data_prod = ' Кошик: ' + str(row[2])
+                    inline_btn_1 = InlineKeyboardButton(text='Додати в кошик!', callback_data=data_prod)
+                    inline_kb1 = InlineKeyboardMarkup().add(inline_btn_1)
+                    await bot.send_photo(chat_id=message.from_user.id,
+                                        photo=row[7], caption=text_prod, reply_markup=inline_kb1)
+                con.commit()
+                cur.close()
+                await bot.send_message(chat_id=message.from_user.id, text=("Вы знову в меню!"), reply_markup=kb.greet_kb)
+        await state.finish()
 
 
 class Form_cart_to_pay(StatesGroup):
