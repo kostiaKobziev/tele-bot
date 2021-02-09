@@ -241,7 +241,7 @@ async def process_gender(message: Message, state: FSMContext):
             })
 
         await send_telegram(md.text(
-            md.text('#Бронірованіе_століка'),
+            md.text('#Бронювання_століка'),
             md.text(now.strftime("%d-%m-%Y %H:%M")),
             md.text('Час бронювання:', md.bold(data['name_reserv'])),
             md.text('Кількість людей:', md.code(data['age'])),
