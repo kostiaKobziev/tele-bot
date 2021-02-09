@@ -1653,9 +1653,9 @@ async def process_cat(message: Message, state: FSMContext):
         await bot.send_message(chat_id=message.from_user.id, text=total_text, reply_markup=To_cart_kb)
 
     else:
+        button_8 = KeyboardButton('В головне меню')
         await Form_prod.next()
         sub_cat_kb.row(button_8)
-        button_8 = KeyboardButton('В головне меню')
         await bot.send_message(chat_id=message.from_user.id, text=("Под категория"), reply_markup=sub_cat_kb)
 
 
