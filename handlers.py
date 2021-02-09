@@ -1604,7 +1604,6 @@ async def process_cat(message: Message, state: FSMContext):
         data['cat'] = message.text
     con = sql.connect('prod_test_db_1.db.db')
     with con:
-        button_8 = KeyboardButton('В головне меню')
         cur = con.cursor()
         cur.execute(f"SELECT * FROM prod WHERE main_cat = '{data['cat']}'")
         rows = cur.fetchall()
@@ -1619,7 +1618,6 @@ async def process_cat(message: Message, state: FSMContext):
             counter_sub_cat_st = str(counter_sub_cat)
             globals()[str('buttonmenucat_%s') + str(counter_sub_cat_st)] = KeyboardButton(f"{str(row)}")
             sub_cat_kb.row(globals()[str('buttonmenucat_%s') + str(counter_sub_cat_st)])
-            sub_cat_kb.row(button_8)
     con.commit()
     cur.close()
     if data['cat'] == 'В головне меню':
@@ -1656,6 +1654,8 @@ async def process_cat(message: Message, state: FSMContext):
 
     else:
         await Form_prod.next()
+        sub_cat_kb.row(button_8)
+        button_8 = KeyboardButton('В головне меню')
         await bot.send_message(chat_id=message.from_user.id, text=("Под категория"), reply_markup=sub_cat_kb)
 
 
