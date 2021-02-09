@@ -1662,12 +1662,12 @@ async def process_cat(message: Message, state: FSMContext):
 # Сохраняем пол, выводим анкету
 @dp.message_handler(state=Form_prod.sub_cat)
 async def process_sub_cat(message: Message, state: FSMContext):
+    data['sub_cat'] = message.text
     if data['sub_cat'] == 'В головне меню':
         await state.finish()
         await bot.send_message(chat_id=message.from_user.id, text=("Вы снова в меню!"), reply_markup=kb.greet_kb)
     else :
         async with state.proxy() as data:
-            data['sub_cat'] = message.text
             con = sql.connect('prod_test_db_1.db.db')
             with con:
                 cur = con.cursor()
