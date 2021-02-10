@@ -34,7 +34,7 @@ true_pass = '1'
 # Хэндлер на текстовое сообщение с текстом “Отмена”
 @dp.message_handler(lambda message: message.text == "Контакти")
 async def Contact(message: Message):
-    con = sqlite3.connect('text.db')
+    con = sqlite3.connect('main_text.db')
     with con:
         cur = con.cursor()
         cur.execute(f"SELECT * FROM text WHERE text_slug = 'Contact_text'")
